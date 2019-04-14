@@ -10,12 +10,14 @@ class Game extends Component {
       [1, 2, 3],
       [4, 5, 6],
       [7, 8, 9],
+      [10, 11, 12]
     ],
     isGameStarted: false,
     isGameFinished: false,
+    isSecondLevelStarted: false,
+    interval: null,
     randomWhole: null,
-    score: 0,
-    isLevel2: false
+    score: 0
   }
 
   randomWhole = () => {
@@ -42,29 +44,56 @@ class Game extends Component {
   }
 
   startLevel1 = () => {
+    this.randomWhole()
     const showMole = setInterval(
      () => {
         this.checkLevel1()
         this.randomWhole()
      },
-     1000
+     1500
     )
     this.setState({ interval: showMole })
   }
 
   checkLevel = () => {
-    if (this.state.score >= 3) {
+    if (this.state.isSecondLevelStarted) {
         clearInterval(this.state.interval)
         this.startLevel2()
     }
+    console.log(this.state.isSecondLevelStarted)
   }
 
   startLevel2 = () => {
+    this.randomWhole()
     const showMole = setInterval(
       this.randomWhole,
-      500
+      1000
     )
     this.UNSAFE_componentWillMount.setState({ interval: showMole })
+  }
+
+  nextMove = () => {
+    if (this.UNSAFE_componentWillMount.state.isSecondLevelStarted) {
+      clearInterval(this.state.interval)
+      this.startLevel2()
+    } else {
+      clearInterval(this.state.interval)
+      this.startLevel1()
+    }
+  }
+
+  countScores = () => {
+    this.setState({ score: this.state.score +1})
+    if (this.state.score + 1 >= 9) {
+      this.setState({isSecondLevelStarted: true})
+      clearInterval(this.state.interval)
+    }
+
+  onUserClick = (userWhole) => {
+    if (this.state.randomWhole === userWhole) {
+      this.countScores()
+      this.nextMove()
+    }
   }
 
   endGame = () => {
@@ -74,36 +103,35 @@ class Game extends Component {
         this.setState({
           isGameStarted: false,
           randomWhole: null,
-          isGameFinished: true
+          isGameFinished: true,
+          isSecondLevelStarted: false
         })
       },
-      10000
+      30000
     )
-  }
-  countScores = (userWhole) => {
-    if (this.state.randomWhole === userWhole) {
-      this.setState({ score: this.state.score + 1 })
-    }
   }
 
   render() {
-    console.log(this.state)
     return (
       <div>
         <h1>Whack a mole</h1>
-        <h2>Score: {this.state.score}</h2>
-          <GameBoard
+        <h2>{this.state.score}</h2>
+        <GameBoard
 					wholes={this.state.wholes}
-					countScores={this.countScores}
-					className={'board'}
-            randomWhole={this.state.randomWhole}
-          />
-        <Button
-          variant={'contained'}
-          onClick={this.startGame}
-        >
-          Play
-        </Button>
+          onUserClick={this.onUserClick}
+          randomWhole={this.state.randomWhole}
+        />
+        {
+          !this.state.isGameStarted ?
+            <Button
+              variant={'contained'}
+              onClick={this.startGame}
+            >
+              Play
+            </Button>
+              :
+              null
+        }
       </div>
     )
   }

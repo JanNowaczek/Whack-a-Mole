@@ -3,7 +3,7 @@ import React from 'react'
 const Whole = (props) => {
     return (
         <div 
-            onClick={props.countScores}
+            onClick={props.onUserClick}
             className={props.className}
         >
         </div>
