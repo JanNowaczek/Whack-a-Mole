@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import game from './Game'
+import Game from './Game'
 
 
 ReactDOM.render(
