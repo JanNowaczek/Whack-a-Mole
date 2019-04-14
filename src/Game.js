@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 
-import Whole from './Whole'
 import GameBoard from './GameBoard'
 import Button from '@material-ui/core/Button'
 
@@ -46,19 +45,19 @@ class Game extends Component {
   startLevel1 = () => {
     this.randomWhole()
     const showMole = setInterval(
-     () => {
+      () => {
         this.checkLevel1()
         this.randomWhole()
-     },
-     1500
+      },
+      1500
     )
     this.setState({ interval: showMole })
   }
 
   checkLevel = () => {
     if (this.state.isSecondLevelStarted) {
-        clearInterval(this.state.interval)
-        this.startLevel2()
+      clearInterval(this.state.interval)
+      this.startLevel2()
     }
     console.log(this.state.isSecondLevelStarted)
   }
@@ -83,58 +82,59 @@ class Game extends Component {
   }
 
   countScores = () => {
-    this.setState({ score: this.state.score +1})
+    this.setState({ score: this.state.score + 1 })
     if (this.state.score + 1 >= 9) {
-      this.setState({isSecondLevelStarted: true})
+      this.setState({ isSecondLevelStarted: true })
       clearInterval(this.state.interval)
     }
 
-  onUserClick = (userWhole) => {
-    if (this.state.randomWhole === userWhole) {
-      this.countScores()
-      this.nextMove()
+    onUserClick = (userWhole) => {
+      if (this.state.randomWhole === userWhole) {
+        this.countScores()
+        this.nextMove()
+      }
     }
-  }
 
-  endGame = () => {
-    setTimeout(
-      () => {
-        clearInterval(this.state.interval)
-        this.setState({
-          isGameStarted: false,
-          randomWhole: null,
-          isGameFinished: true,
-          isSecondLevelStarted: false
-        })
-      },
-      30000
-    )
-  }
+    endGame = () => {
+      setTimeout(
+        () => {
+          clearInterval(this.state.interval)
+          this.setState({
+            isGameStarted: false,
+            randomWhole: null,
+            isGameFinished: true,
+            isSecondLevelStarted: false
+          })
+        },
+        30000
+      )
+    }
 
-  render() {
-    return (
-      <div>
-        <h1>Whack a mole</h1>
-        <h2>{this.state.score}</h2>
-        <GameBoard
-					wholes={this.state.wholes}
-          onUserClick={this.onUserClick}
-          randomWhole={this.state.randomWhole}
-        />
-        {
-          !this.state.isGameStarted ?
-            <Button
-              variant={'contained'}
-              onClick={this.startGame}
-            >
-              Play
-            </Button>
+    render() {
+      return (
+        <div>
+          <h1>Whack a mole</h1>
+          <h2>{this.state.score}</h2>
+          <GameBoard
+            wholes={this.state.wholes}
+            onUserClick={this.onUserClick}
+            className={'board'}
+            randomWhole={this.state.randomWhole}
+          />
+          {
+            !this.state.isGameStarted ?
+              <Button
+                variant={'contained'}
+                onClick={this.startGame}
+              >
+                START
+                  </Button>
               :
               null
-        }
-      </div>
-    )
+          }
+        </div>
+      )
+    }
   }
-}
-
-export default Game
+  
+  export default Game
