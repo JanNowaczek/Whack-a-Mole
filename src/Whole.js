@@ -3,7 +3,7 @@ import React from 'react'
 const Whole = (props) => {
     return (
         <div 
-            className={'whole'}
+            className={props.className}
         >
         </div>
     )
